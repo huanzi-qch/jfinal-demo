@@ -1,0 +1,26 @@
+package cn.huanzi.qch.${entityToLowerCase}.model.base;
+
+import com.jfinal.plugin.activerecord.Model;
+import com.jfinal.plugin.activerecord.IBean;
+
+/**
+ * ${tableComment} BaseModel
+ *
+ * ${author}
+ * ${date}
+ */
+@SuppressWarnings("serial")
+public abstract class Base${entity}<M extends Base${entity}<M>> extends Model<M> implements IBean {
+#for
+    //${tableInfo.columnComment}
+    private ${tableInfo.dataType} ${tableInfo.columnName};
+    public void set${tableInfo.columnNameFirstToUpperCase}(${tableInfo.dataType} ${tableInfo.columnName}) {
+        this.${tableInfo.columnName} = ${tableInfo.columnName};
+        set("${tableInfo.column_name}", this.${tableInfo.columnName});
+    }
+    public ${tableInfo.dataType} get${tableInfo.columnNameFirstToUpperCase}() {
+        this.${tableInfo.columnName} = get("${tableInfo.column_name}");
+        return this.${tableInfo.columnName};
+    }
+#end
+}

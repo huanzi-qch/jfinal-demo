@@ -1,0 +1,14 @@
+package cn.huanzi.qch.${entityToLowerCase}.service;
+
+import cn.huanzi.qch.common.service.CommonService;
+import cn.huanzi.qch.${entityToLowerCase}.model.${entity};
+
+/**
+ * ${tableComment} Service
+ *
+ * ${author}
+ * ${date}
+ */
+public interface ${entity}Service extends CommonService<${entity}> {
+
+}

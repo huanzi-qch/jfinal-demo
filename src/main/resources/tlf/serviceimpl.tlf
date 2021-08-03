@@ -1,0 +1,16 @@
+package cn.huanzi.qch.${entityToLowerCase}.service;
+
+import cn.huanzi.qch.common.service.CommonServiceImpl;
+import cn.huanzi.qch.${entityToLowerCase}.model.${entity};
+import com.jfinal.log.Log;
+
+/**
+ * ${tableComment} ServiceImpl
+ *
+ * ${author}
+ * ${date}
+ */
+public class ${entity}ServiceImpl extends CommonServiceImpl<${entity}> implements ${entity}Service{
+    private Log log = Log.getLog(${entity}ServiceImpl.class);
+
+}

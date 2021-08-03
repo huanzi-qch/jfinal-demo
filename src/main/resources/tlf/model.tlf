@@ -1,0 +1,15 @@
+package cn.huanzi.qch.${entityToLowerCase}.model;
+
+import cn.huanzi.qch.${entityToLowerCase}.model.base.Base${entity};
+
+/**
+ * ${tableComment} Model
+ *
+ * ${author}
+ * ${date}
+ */
+@SuppressWarnings("serial")
+public class ${entity} extends Base${entity}<${entity}> {
+    public static final ${entity} dao = new ${entity}().dao();
+
+}

@@ -1,0 +1,5 @@
+#配置 undertow
+
+profile.active=dev
+undertow.port=10010
+undertow.contextPath=/

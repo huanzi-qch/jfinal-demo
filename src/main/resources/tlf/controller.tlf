@@ -1,0 +1,41 @@
+package cn.huanzi.qch.${entityToLowerCase}.controller;
+
+import cn.huanzi.qch.common.controller.CommonController;
+import cn.huanzi.qch.common.model.PageCondition;
+import cn.huanzi.qch.${entityToLowerCase}.service.${entity}Service;
+import cn.huanzi.qch.${entityToLowerCase}.service.${entity}ServiceImpl;
+import cn.huanzi.qch.${entityToLowerCase}.model.${entity};
+import com.jfinal.aop.Inject;
+import com.jfinal.core.Path;
+import com.jfinal.log.Log;
+
+/**
+ * ${tableComment} Controller
+ *
+ * ${author}
+ * ${date}
+ */
+@Path(value = "/${entityFirstToLowerCase}",viewPath = "/${entityFirstToLowerCase}")
+public class ${entity}Controller extends CommonController<${entity},${entity}ServiceImpl> {
+	private Log log = Log.getLog(${entity}Controller.class);
+
+	@Inject(${entity}ServiceImpl.class)
+	${entity}Service ${entityFirstToLowerCase}Service;
+
+	public void index() {
+	    PageCondition pageCondition = new PageCondition();
+        pageCondition.setPageNumber(getInt("pageNumber",1));
+	    set("${entityFirstToLowerCase}",${entityFirstToLowerCase}Service.page(pageCondition,${entity}.dao));
+		render("${entityFirstToLowerCase}.html");
+	}
+
+	public void form() {
+	    //接参
+        String id = get("id");
+
+		set("${entityFirstToLowerCase}",${entityFirstToLowerCase}Service.get(id));
+		render("form.html");
+	}
+}
+
+

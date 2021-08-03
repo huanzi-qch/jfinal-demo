@@ -1,0 +1,29 @@
+<form action="/blog/save" method="post">
+	<fieldset class="solid">
+		<legend>Blog表单</legend>
+		#if (blog.data == null)
+		<div>
+			<label>博客id：</label>
+			<input type="text" name="blog.id" value="#(blog.data.id??)" />
+		</div>
+		#else
+		<input type="hidden" name="blog.id" value="#(blog.data.id??)" />
+		#end
+		<div>
+			<label>所属用户：</label>
+			<input type="text" name="blog.userId" value="#(blog.data.userId??)" />#(titleMsg)
+			#if (blog.data != null)
+			<input type="text" readonly="readonly" value="#(user.data.userName??)" />#(titleMsg)
+			#end
+		</div>
+		<div>
+			<label>博客标题：</label>
+			<input type="text" name="blog.title" value="#(blog.data.title??)" />#(titleMsg)
+		</div>
+		<div>
+			<label>博客内容：</label>
+			<textarea name="blog.content" cols="80" rows="10">#(blog.data.content??)</textarea>#(contentMsg)
+		</div>
+		<input value="提交" type="submit">
+	</fieldset>
+</form>
