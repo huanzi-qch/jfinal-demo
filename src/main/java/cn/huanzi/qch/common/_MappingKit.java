@@ -15,8 +15,8 @@ public class _MappingKit {
 	 * 表、实体、主键关系集合
 	 * 方便SqlUtil工具类拼接查询sql
 	 */
-    public static HashMap<String,String> tableMapping = new HashMap<>();
-    public static HashMap<String,String> primaryKeyMapping = new HashMap<>();
+    public static HashMap<String,String> tableMapping = new HashMap<>(2);
+    public static HashMap<String,String> primaryKeyMapping = new HashMap<>(2);
 
 	public static void mapping(ActiveRecordPlugin arp) {
 		arp.addMapping("blog", "id", Blog.class);
