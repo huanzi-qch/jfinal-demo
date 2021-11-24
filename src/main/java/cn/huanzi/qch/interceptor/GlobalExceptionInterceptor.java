@@ -14,8 +14,9 @@ import com.jfinal.log.Log;
  */
 public class GlobalExceptionInterceptor implements Interceptor{
 
-    private static Log log = Log.getLog(GlobalExceptionInterceptor.class);
+    private static final Log log = Log.getLog(GlobalExceptionInterceptor.class);
 
+    @Override
     public void intercept(Invocation inv) {
         Result result = null;
 

@@ -10,7 +10,7 @@ public enum ErrorEnum {
 
     //400系列
     BAD_REQUEST(400,"请求的数据格式不符!"),
-    UNAUTHORIZED(401,"登录凭证过期!"),
+    UNAUTHORIZED(401,"未登录或登录凭证过期!"),
     FORBIDDEN(403,"抱歉，你无权限访问!"),
     NOT_FOUND(404, "请求的资源找不到!"),
 

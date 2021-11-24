@@ -99,6 +99,7 @@ public class AppConfig extends JFinalConfig {
 
 		// 此处配置 Routes 级别的拦截器，可配置多个
 		me.addInterceptor(new GlobalExceptionInterceptor());
+//		me.addInterceptor(new AccessAuthorityInterceptor());
 	}
 	
 	public void configEngine(Engine me) {
@@ -123,6 +124,10 @@ public class AppConfig extends JFinalConfig {
 		
 		// 配置ActiveRecord插件
 		ActiveRecordPlugin arp = new ActiveRecordPlugin(druidPlugin);
+
+		//打印执行的SQL
+		arp.setShowSql(true);
+
 		// 所有映射在 MappingKit 中自动化搞定
 		_MappingKit.mapping(arp);
 		me.add(arp);

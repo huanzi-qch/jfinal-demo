@@ -51,7 +51,7 @@ public abstract class CommonController<E,S> extends Controller {
             }
         });
 
-        http://172.16.12.156:10010/user/[find,delete]/1
+        http://172.16.12.156:10010/user/[get,delete]/1
 	*/
 
     /**
