@@ -85,6 +85,10 @@ public class SqlUtil {
 
     /**
      * 实体属性转表字段，驼峰属性转下划线，并全部转小写
+     *
+     * //驼峰转下划线、下划线转驼峰
+     * //StrUtil.toUnderlineCase("userName");//user_name
+     * //StrUtil.toCamelCase("user_name");//userName
      */
     public static String translate(String fieldName){
         return StrUtil.toUnderlineCase(fieldName).toLowerCase();

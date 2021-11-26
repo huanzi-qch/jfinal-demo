@@ -2,6 +2,7 @@ package cn.huanzi.qch.config;
 
 import cn.huanzi.qch.common._MappingKit;
 import cn.huanzi.qch.handler.MyActionHandler;
+import cn.huanzi.qch.interceptor.CORSInterceptor;
 import cn.huanzi.qch.interceptor.GlobalExceptionInterceptor;
 import com.jfinal.config.*;
 import com.jfinal.i18n.I18nInterceptor;
@@ -99,6 +100,7 @@ public class AppConfig extends JFinalConfig {
 
 		// 此处配置 Routes 级别的拦截器，可配置多个
 		me.addInterceptor(new GlobalExceptionInterceptor());
+		me.addInterceptor(new CORSInterceptor());
 //		me.addInterceptor(new AccessAuthorityInterceptor());
 	}
 	
