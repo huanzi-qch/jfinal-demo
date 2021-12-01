@@ -4,6 +4,8 @@ import cn.huanzi.qch.common._MappingKit;
 import cn.huanzi.qch.handler.MyActionHandler;
 import cn.huanzi.qch.interceptor.CORSInterceptor;
 import cn.huanzi.qch.interceptor.GlobalExceptionInterceptor;
+import cn.hutool.core.io.resource.ResourceUtil;
+import cn.hutool.core.util.URLUtil;
 import com.jfinal.config.*;
 import com.jfinal.i18n.I18nInterceptor;
 import com.jfinal.json.JFinalJson;
@@ -16,19 +18,24 @@ import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
 import com.jfinal.plugin.cron4j.Cron4jPlugin;
 import com.jfinal.plugin.druid.DruidPlugin;
 import com.jfinal.template.Engine;
+import com.jfinal.template.source.ClassPathSource;
 
 import javax.sql.DataSource;
+import java.io.File;
+import java.util.Objects;
 
 /**
  * API 引导式配置
  */
 public class AppConfig extends JFinalConfig {
-	private static Log log = Log.getLog(AppConfig.class);
+	private final Log log = Log.getLog(this.getClass());
 
 	static Prop p;
 
 	public AppConfig(){
 		AppConfig.loadConfig();
+
+		log.info("当前配置文件：profile.active="+p.get("config.name"));
 	}
 
 	public static DataSource getDataSource() {
@@ -50,8 +57,6 @@ public class AppConfig extends JFinalConfig {
 		}else {
 			p = PropKit.use("config-dev.properties");
 		}
-
-		log.info("当前使用配置文件profile.active="+p.get("config.name"));
 	}
 	
 	/**
@@ -130,9 +135,31 @@ public class AppConfig extends JFinalConfig {
 		//打印执行的SQL
 		arp.setShowSql(true);
 
+		//是否开发模式
+		arp.setDevMode(p.getBoolean("devMode", false));
+
+		//扫描资源文件夹里面的sqltlf文件夹
+		scanFileAddSqlTemplate(new File(URLUtil.decode(ResourceUtil.getResourceIter("sqltlf").next().getFile())),arp);
+
 		// 所有映射在 MappingKit 中自动化搞定
 		_MappingKit.mapping(arp);
 		me.add(arp);
+	}
+
+	//递归扫描文件夹，加载sql模板
+	private void scanFileAddSqlTemplate(File file,ActiveRecordPlugin arp){
+		if (file.isFile()) {
+			String fileName = file.getName();
+			if (fileName.endsWith(".sql")) {
+				String filePath = file.getPath().split("classes\\\\")[1];
+				log.info("Enjoy SQL 模板："+filePath+"，加载成功！");
+				arp.addSqlTemplate(new ClassPathSource(filePath));
+			}
+		} else if (file.isDirectory()) {
+			for (File listFile : Objects.requireNonNull(file.listFiles())) {
+				scanFileAddSqlTemplate(listFile,arp);
+			}
+		}
 	}
 	
 	public static DruidPlugin createDruidPlugin() {

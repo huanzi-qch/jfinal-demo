@@ -11,6 +11,6 @@ import com.jfinal.log.Log;
  * ${date}
  */
 public class ${entity}ServiceImpl extends CommonServiceImpl<${entity}> implements ${entity}Service{
-    private Log log = Log.getLog(${entity}ServiceImpl.class);
+    private final Log log = Log.getLog(this.getClass());
 
 }

@@ -22,7 +22,7 @@ import java.util.List;
  */
 @Path(value = "/user",viewPath = "/user")
 public class UserController extends CommonController<User,UserServiceImpl> {
-	private Log log = Log.getLog(UserController.class);
+	private final Log log = Log.getLog(this.getClass());
 
 	@Inject(UserServiceImpl.class)
 	UserService userService;

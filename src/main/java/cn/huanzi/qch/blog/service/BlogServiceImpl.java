@@ -11,7 +11,7 @@ import com.jfinal.log.Log;
  * 生成日期：2021-07-26 09:31:41
  */
 public class BlogServiceImpl extends CommonServiceImpl<Blog> implements BlogService{
-    private Log log = Log.getLog(BlogServiceImpl.class);
+    private final Log log = Log.getLog(this.getClass());
 
     @Override
     public String errorTest2() {

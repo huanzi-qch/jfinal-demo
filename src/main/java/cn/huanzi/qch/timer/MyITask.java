@@ -9,7 +9,7 @@ import com.jfinal.plugin.cron4j.ITask;
  */
 public class MyITask implements ITask {
     //日志输出
-    private Log log = Log.getLog(MyITask.class);
+    private final Log log = Log.getLog(this.getClass());
     
     @Override
     public void stop() {

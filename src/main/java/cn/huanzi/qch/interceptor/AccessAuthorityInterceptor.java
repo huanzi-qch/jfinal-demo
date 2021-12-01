@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
  * 访问权限拦截器
  */
 public class AccessAuthorityInterceptor implements Interceptor {
-    private static final Log log = Log.getLog(AccessAuthorityInterceptor.class);
+    private final Log log = Log.getLog(this.getClass());
 
     @Override
     public void intercept(Invocation invocation) {

@@ -17,7 +17,7 @@ import com.jfinal.log.Log;
  */
 @Path(value = "/${entityFirstToLowerCase}",viewPath = "/${entityFirstToLowerCase}")
 public class ${entity}Controller extends CommonController<${entity},${entity}ServiceImpl> {
-	private Log log = Log.getLog(${entity}Controller.class);
+	private final Log log = Log.getLog(this.getClass());
 
 	@Inject(${entity}ServiceImpl.class)
 	${entity}Service ${entityFirstToLowerCase}Service;

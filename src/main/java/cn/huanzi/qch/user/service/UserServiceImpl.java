@@ -11,7 +11,7 @@ import com.jfinal.log.Log;
  * 生成日期：2021-07-29 17:32:50
  */
 public class UserServiceImpl extends CommonServiceImpl<User> implements UserService{
-    private Log log = Log.getLog(UserServiceImpl.class);
+    private final Log log = Log.getLog(this.getClass());
 
 }
 
