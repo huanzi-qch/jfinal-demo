@@ -3,11 +3,13 @@ package cn.huanzi.qch.common;
 import cn.huanzi.qch.blog.model.Blog;
 import cn.huanzi.qch.user.model.User;
 import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
+
 import java.util.HashMap;
 
 /**
  * 数据表、主键、实体类关系映射
- * 需要手动维护
+ *
+ * PS：_MappingKit.java 由 AutoGeneratorPlus.java 自动维护，也可以手动维护
  */
 public class _MappingKit {
 

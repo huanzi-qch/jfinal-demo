@@ -6,6 +6,7 @@ import java.util.HashMap;
 
 /**
  * 原生jdbc操作数据库工具类
+ * https://www.cnblogs.com/huanzi-qch/p/15474928.html
  */
 public class DbUtil {
 
@@ -116,12 +117,12 @@ public class DbUtil {
 
         //获取连接
         Connection conn = this.getConnection();
-        PreparedStatement ps;
         ResultSet rs;
 
-        try {
+        //语法糖
+        //关闭PreparedStatement，会连带关闭ResultSet
+        try(PreparedStatement ps = conn.prepareStatement(sql);) {
             //设置SQL、以及参数
-            ps = conn.prepareStatement(sql);
             if (params != null) {
                 for (int i = 0; i < params.length; i++) {
                     ps.setObject(i + 1, params[i]);
@@ -169,16 +170,15 @@ public class DbUtil {
      * 执行
      * 新增/删除/更新 等SQL语句
      */
-    public boolean execute(String sql, Object[] params){
-        boolean flag = false;
+    public int execute(String sql, Object[] params){
+        int flag = 0;
 
         //获取连接
         Connection conn = this.getConnection();
-        PreparedStatement ps;
 
-        try {
+        //语法糖
+        try(PreparedStatement ps = conn.prepareStatement(sql);) {
             //设置SQL、以及参数
-            ps = conn.prepareStatement(sql);
             if (params != null) {
                 for (int i = 0; i < params.length; i++) {
                     ps.setObject(i + 1, params[i]);
@@ -186,7 +186,7 @@ public class DbUtil {
             }
 
             //执行
-            flag = ps.execute();
+            flag = ps.executeUpdate();
         } catch (SQLException e) {
             System.err.println("执行 jdbcUtil.update() 异常...");
             e.printStackTrace();
@@ -194,7 +194,7 @@ public class DbUtil {
 
         return flag;
     }
-    public boolean execute(String sql){
+    public int execute(String sql){
         return this.execute(sql,null);
     }
 }

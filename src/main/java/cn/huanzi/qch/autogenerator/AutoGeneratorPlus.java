@@ -250,6 +250,28 @@ public class AutoGeneratorPlus {
                 e.printStackTrace();
             }
         }
+
+        /**
+         * 读取文本文件
+         * @param file file对象
+         * @return List<String>
+         */
+        private static StringBuilder fileReader(File file){
+            StringBuilder stringBuilder = new StringBuilder();
+
+            try (FileReader fileReader = new FileReader(file);){
+                BufferedReader bufferedReader = new BufferedReader(fileReader);
+                Object[] lines = bufferedReader.lines().toArray();
+                for (Object line : lines) {
+                    stringBuilder.append(line).append("\n");
+                }
+                stringBuilder.deleteCharAt(stringBuilder.length()-1);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return stringBuilder;
+        }
     }
 
     /**
@@ -506,6 +528,24 @@ public class AutoGeneratorPlus {
         customParameter.put("author","作者：Auto Generator By 'huanzi-qch'");
         customParameter.put("date","生成日期："+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
 
+        //自动维护_MappingKit.java
+        File mappingKitFile = new File(System.getProperty("user.dir") + "\\src\\main\\java\\cn\\huanzi\\qch\\common\\_MappingKit.java");
+        StringBuilder fileReader = FileUtil.fileReader(mappingKitFile);
+        String id = "";
+        for (TableInfo info : tableInfo) {
+            if ("PRI".equals(info.getColumnKey())){
+                id = info.getColumnName();
+                break;
+            }
+        }
+        String str = "\n" +
+                "\t\tarp.addMapping(\""+tableName+"\", \""+id+"\", "+ captureName+".class);\n" +
+                "\t\ttableMapping.put("+captureName+".class.getName(),\""+tableName+"\");\n" +
+                "\t\tprimaryKeyMapping.put("+captureName+".class.getName(),\""+id+"\");\n";
+        fileReader.insert(fileReader.length()-4,str);
+        fileReader.insert(31,"import cn.huanzi.qch."+captureName.toLowerCase()+".model."+captureName+";\n");
+        FileUtil.fileWriter(mappingKitFile,fileReader);
+
         //读取模板、生成代码
         writer(tlfPath+"controller.tlf",
                 filePath + "controller\\" + captureName + "Controller.java",
@@ -527,7 +567,7 @@ public class AutoGeneratorPlus {
     }
 
 //    public static void main(String[] args) {
-//        String[] tables = {"user"};
+//        String[] tables = {"tb_xxx"};
 //        for (String table : tables) {
 //            String msg = new AutoGeneratorPlus(table).create();
 //            System.out.println(msg);
