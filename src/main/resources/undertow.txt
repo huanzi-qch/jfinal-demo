@@ -7,7 +7,7 @@ undertow.contextPath=/
 
 # 配置https
 undertow.ssl.enable=true
-undertow.ssl.port=443
+undertow.ssl.port=10011
 undertow.ssl.keyStoreType=JKS
 undertow.ssl.keyStore=jfinal.keystore
 undertow.ssl.keyStorePassword=123456
