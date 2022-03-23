@@ -13,11 +13,11 @@ public class MyITask implements ITask {
     
     @Override
     public void stop() {
-        log.info(DateUtil.date() + "，MyITask stop");
+        log.info("%s，MyITask stop",DateUtil.date());
     }
 
     @Override
     public void run() {
-        log.info(DateUtil.date() + "，MyITask每分钟执行一次 run");
+        log.info("%s，MyITask每分钟执行一次 run",DateUtil.date());
     }
 }

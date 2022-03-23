@@ -35,14 +35,28 @@
 			<artifactId>log4j</artifactId>
 			<version>1.2.17</version>
 		</dependency>
-		
+
 		<!-- mysql 驱动 -->
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<version>5.1.44</version>
 		</dependency>
-		
+
+		<!-- java版本 -->
+		<dependency>
+			<groupId>org.clojars.brenton</groupId>
+			<artifactId>google-diff-match-patch</artifactId>
+			<version>0.1</version>
+		</dependency>
+
+		<!-- webjars js版本 -->
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>google-diff-match-patch</artifactId>
+			<version>895a9512bb</version>
+		</dependency>
+
 		<!-- druid 数据源连接池 -->
 		<dependency>
 			<groupId>com.alibaba</groupId>

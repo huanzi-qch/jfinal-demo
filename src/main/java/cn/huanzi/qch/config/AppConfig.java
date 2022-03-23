@@ -2,6 +2,7 @@ package cn.huanzi.qch.config;
 
 import cn.huanzi.qch.common._MappingKit;
 import cn.huanzi.qch.handler.MyActionHandler;
+import cn.huanzi.qch.handler.WebJarsHandler;
 import cn.huanzi.qch.interceptor.CORSInterceptor;
 import cn.huanzi.qch.interceptor.GlobalExceptionInterceptor;
 import cn.hutool.core.io.resource.ResourceUtil;
@@ -35,7 +36,7 @@ public class AppConfig extends JFinalConfig {
 	public AppConfig(){
 		AppConfig.loadConfig();
 
-		log.info("当前配置文件：profile.active="+p.get("config.name"));
+		log.info("当前配置文件：profile.active=%s",p.get("config.name"));
 	}
 
 	public static DataSource getDataSource() {
@@ -152,7 +153,7 @@ public class AppConfig extends JFinalConfig {
 			String fileName = file.getName();
 			if (fileName.endsWith(".sql")) {
 				String filePath = file.getPath().split("classes\\\\")[1];
-				log.info("Enjoy SQL 模板："+filePath+"，加载成功！");
+				log.info("Enjoy SQL 模板：%s，加载成功！",filePath);
 				arp.addSqlTemplate(new ClassPathSource(filePath));
 			}
 		} else if (file.isDirectory()) {
@@ -179,5 +180,6 @@ public class AppConfig extends JFinalConfig {
 	 */
 	public void configHandler(Handlers me) {
 		me.add(new MyActionHandler());
+		me.add(new WebJarsHandler());
 	}
 }

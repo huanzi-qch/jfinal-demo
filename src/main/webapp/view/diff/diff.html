@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="UTF-8"/>
+    <title>文本内容对比</title>
+    <style>
+        .div-diff{
+            margin: 0 auto;
+            width: 500px;
+        }
+        .div-diff p{
+            margin: 5px;
+        }
+        .div-diff h4{
+            padding: 5px 0;
+            margin: 0;
+            text-align: center;
+            background: #f3f9ff;
+        }
+        .div-main{
+            width: 500px;
+        }
+        .div-text{
+            width: 240px;
+            /*background: #eaeaea;*/
+            border: solid 1px #64b3e6;
+        }
+        .div-result{
+            width: 100%;
+            /*background: #eaeaea;*/
+            border: solid 1px #64b3e6;
+        }
+        .div-text-p{
+            height: 200px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+<div class="div-diff">
+    <div class="div-main">
+        <div class="div-text" style="float: left;">
+            <h4>上版本内容</h4>
+            <div class="div-text-p" >
+                <p id="text1"></p>
+            </div>
+        </div>
+        <div class="div-text" style="float: right;">
+            <h4>本版本内容</h4>
+            <div class="div-text-p" >
+                <p id="text2"></p>
+            </div>
+        </div>
+    </div>
+    <div class="div-main" style="position: fixed;top: 255px;">
+        <div class="div-result">
+            <h4>内容差异对比</h4>
+            <div class="div-text-p" >
+                <p id="result"></p>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<!-- jquery -->
+<script src="#(ctx)/assets/js/jquery-3.6.0.min.js" type="text/javascript"></script>
+
+<!-- webjar diff_match_patch -->
+<script src="#(ctx)/webjars/google-diff-match-patch/895a9512bb/diff_match_patch.js" type="text/javascript"></script>
+<script>
+    //上版本内容
+    let text1 = "我是中华人民共和国合法居民，今天写一个测试文本，并没有其他的意思。";
+    //本版本内容
+    let text2 = "我是中国合法居民，今天打算写一个文本内容测试字符，没有别的意思！";
+
+    //脚本测试
+    let flag = 0;
+
+    //使用java版本库，调用后台处理
+    if(flag){
+        $.ajax({
+            type:"POST",
+            url:"#(ctx)/diff/diffPrettyHtml",
+            data:{
+                text1:text1,
+                text2:text2,
+            },
+            dataType:"JSON",
+            contentType:"application/x-www-form-urlencoded",
+            success:function(data){
+                console.log(data);
+
+                $("#text1").html(text1);
+                $("#text2").html(text2);
+                $("#result").html(data.data);
+            },
+            error:function(data){
+                console.error(data);
+            }
+        })
+    }
+    //使用js版本库，直接在前端处理
+    else{
+        let diffMatchPatch = new diff_match_patch();
+        let diffPrettyHtml = diffMatchPatch.diff_prettyHtml(diffMatchPatch.diff_main(text1,text2));
+
+        $("#text1").html(text1);
+        $("#text2").html(text2);
+        $("#result").html(diffPrettyHtml);
+    }
+</script>
+</html>
