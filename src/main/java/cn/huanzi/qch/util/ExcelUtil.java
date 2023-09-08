@@ -2,7 +2,6 @@ package cn.huanzi.qch.util;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
@@ -58,8 +57,8 @@ public class ExcelUtil {
             e.printStackTrace();
 		}
      */
-    public static void exportByResponse(HttpServletResponse response, String fileName, LinkedHashMap<String,String> columns, List<Map<String,Object>> datas) throws Exception {
-        response.addHeader("Content-disposition","attachment; filename=" + new String(fileName.getBytes("GBK"), "ISO8859-1") + ".xls");
+    public static void exportByResponse(HttpServletResponse response, String fileName, LinkedHashMap<String, String> columns, List<Map<String, Object>> datas) throws Exception {
+        response.addHeader("Content-disposition", "attachment; filename=" + fileName + ".xls");
         response.setContentType("application/ms-excel");
 
         StringBuilder sb = exportOfData(columns, datas);
@@ -69,25 +68,50 @@ public class ExcelUtil {
         out.flush();
         out.close();
     }
-    public static void exportByFile(File file, LinkedHashMap<String,String> columns, List<Map<String,Object>> datas) {
+
+    public static void exportByFile(File file, LinkedHashMap<String, String> columns, List<Map<String, Object>> datas) {
         StringBuilder sb = exportOfData(columns, datas);
 
-        try(FileWriter resultFile = new FileWriter(file, false);PrintWriter myFile = new PrintWriter(resultFile);) {
-            myFile.println(sb.toString());
+        try (PrintWriter myFile = new PrintWriter(file,"UTF-8")) {
+            myFile.println(sb);
         } catch (Exception e) {
             System.err.println("exportByFile()，操作出错...");
             e.printStackTrace();
         }
-        System.out.println(file.getName()+"，操作完成！");
+        System.out.println(file.getName() + "，操作完成！");
     }
-    private static StringBuilder exportOfData(LinkedHashMap<String, String> columns, List<Map<String, Object>> datas){
-        StringBuilder sb = new StringBuilder("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">");
+
+    //其他单元格无边框
+    private static StringBuilder exportOfData(LinkedHashMap<String, String> columns, List<Map<String, Object>> datas) {
+        StringBuilder sb = new StringBuilder("<html xmlns:o=\"urn:schemas-microsoft-com:office:office\"" +
+                "      xmlns:x=\"urn:schemas-microsoft-com:office:excel\"" +
+                "      xmlns=\"http://www.w3.org/TR/REC-html40\">");
+
+        //加这个，其他单元格带边框
+        sb.append("<head>" +
+                "    <xml>" +
+                "        <x:ExcelWorkbook>" +
+                "            <x:ExcelWorksheets>" +
+                "                <x:ExcelWorksheet>" +
+                "                    <x:Name></x:Name>" +
+                "                    <x:WorksheetOptions>" +
+                "                        <x:DisplayGridlines/>" +
+                "                    </x:WorksheetOptions>" +
+                "                </x:ExcelWorksheet>" +
+                "            </x:ExcelWorksheets>" +
+                "        </x:ExcelWorkbook>" +
+                "    </xml>" +
+                "   <style>td{font-family: \"宋体\";}</style>" +
+                "</head>");
+
+        sb.append("<body>");
+
         sb.append("<table border=\"1\">");
 
         //列名
         sb.append("<tr style=\"text-align: center;\">");
         for (Map.Entry<String, String> entry : columns.entrySet()) {
-            sb.append("<td style=\"background-color:#bad5fd\">" + entry.getValue() + "</td>");
+            sb.append("<td style=\"background-color:#bad5fd\">").append(entry.getValue()).append("</td>");
         }
         sb.append("</tr>");
 
@@ -98,16 +122,116 @@ public class ExcelUtil {
                 Object dataValue = data.get(entry.getKey());
 
                 //如果是日期类型
-                if(dataValue instanceof java.util.Date){
+                if (dataValue instanceof java.util.Date) {
                     dataValue = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(dataValue);
                 }
-                sb.append("<td>" + dataValue.toString() + "</td>");
+                sb.append("<td>").append(dataValue.toString()).append("</td>");
             }
             sb.append("</tr>");
         }
 
         sb.append("</table>");
 
+        sb.append("</body>");
+
+        sb.append("</html>");
+
         return sb;
     }
+
+    //前端导出Excel
+    /*
+        示例：
+         exportExcel("xx业务Excel导出", {"id": "编号", "name": "名字", "age": "年龄", "time": "参加工作时间"}, [{
+            "id": "A001",
+            "name": "张三",
+            "age": "18",
+            "time": new Date().toLocaleString()
+        },{
+            "id": "A002",
+            "name": "李四",
+            "age": "20",
+            "time": new Date().toLocaleString()
+        }]);
+     */
+    /*
+        //blob、base64转文件下载，通过A标签模拟点击,设置文件名
+        //万能流  application/octet-stream
+        //word文件  application/msword
+        //excel文件  application/vnd.ms-excel
+        //txt文件  text/plain
+        //图片文件  image/png、jpeg、gif、bmp
+        function downloadByBlob(fileName, text) {
+            let a = document.createElement("a");
+            a.href = URL.createObjectURL(new Blob([text], {type: "application/octet-stream"}));
+            a.download = fileName || 'Blob导出测试.txt';
+            a.click();
+            a.remove();
+            URL.revokeObjectURL(a.href);
+        }
+        function downloadByBase64(fileName, text) {
+            let a = document.createElement('a');
+            a.href = 'data:application/octet-stream;base64,' + window.btoa(unescape(encodeURIComponent(text)));
+            a.download = fileName || 'Base64导出测试.txt';
+            a.click();
+            a.remove();
+            URL.revokeObjectURL(a.href);
+        }
+
+        //踹掉后端，前端导出Excel！
+        function exportExcel(fileName,columns,datas){
+            //列名
+            let columnHtml = "";
+            columnHtml += "<tr style=\"text-align: center;\">\n";
+            for (let key in columns) {
+                columnHtml += "<td style=\"background-color:#bad5fd\">"+columns[key]+"</td>\n";
+            }
+            columnHtml += "</tr>\n";
+
+            //数据
+            let dataHtml = "";
+            for (let data of datas) {
+                dataHtml += "<tr style=\"text-align: center;\">\n";
+                for (let key in columns) {
+                    dataHtml += "<td>"+data[key]+"</td>\n";
+                }
+                dataHtml += "</tr>\n";
+            }
+
+            //完整html
+            let excelHtml = "<html xmlns:o=\"urn:schemas-microsoft-com:office:office\"\n" +
+                    "      xmlns:x=\"urn:schemas-microsoft-com:office:excel\"\n" +
+                    "      xmlns=\"http://www.w3.org/TR/REC-html40\">\n" +
+                    "<head>\n" +
+                    "   <!-- 加这个，其他单元格带边框 -->" +
+                    "   <xml>\n" +
+                    "        <x:ExcelWorkbook>\n" +
+                    "            <x:ExcelWorksheets>\n" +
+                    "                <x:ExcelWorksheet>\n" +
+                    "                    <x:Name></x:Name>\n" +
+                    "                    <x:WorksheetOptions>\n" +
+                    "                        <x:DisplayGridlines/>\n" +
+                    "                    </x:WorksheetOptions>\n" +
+                    "                </x:ExcelWorksheet>\n" +
+                    "            </x:ExcelWorksheets>\n" +
+                    "        </x:ExcelWorkbook>\n" +
+                    "   </xml>\n" +
+                    "   <style>td{font-family: \"宋体\";}</style>\n" +
+                    "</head>\n" +
+                    "<body>\n" +
+                    "<table border=\"1\">\n" +
+                    "    <thead>\n" +
+                    columnHtml +
+                    "    </thead>\n" +
+                    "    <tbody>\n" +
+                    dataHtml +
+                    "    </tbody>\n" +
+                    "</table>\n" +
+                    "</body>\n" +
+                    "</html>";
+
+            //下载
+            downloadByBlob((fileName || "导出Excel")+".xls",excelHtml);
+        }
+     */
 }

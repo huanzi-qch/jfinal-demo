@@ -3,10 +3,13 @@ package cn.huanzi.qch.diff.controller;
 import cn.huanzi.qch.common.model.Result;
 import cn.huanzi.qch.diff.service.DiffService;
 import cn.huanzi.qch.diff.service.DiffServiceImpl;
+import cn.huanzi.qch.interceptor.JsonBody;
 import com.jfinal.aop.Inject;
 import com.jfinal.core.Controller;
 import com.jfinal.core.Path;
 import com.jfinal.log.Log;
+
+import java.util.HashMap;
 
 @Path(value = "/diff",viewPath = "/diff")
 public class DiffController extends Controller {
@@ -19,9 +22,9 @@ public class DiffController extends Controller {
         render("diff.html");
     }
 
-    public void diffPrettyHtml() {
-        String text1 = get("text1");
-        String text2 = get("text2");
+    public void diffPrettyHtml(@JsonBody HashMap<String,Object> map) {
+        String text1 = get("text1") == null ?  String.valueOf(map.get("text1")) : get("text1");
+        String text2 = get("text2") == null ?  String.valueOf(map.get("text2")) : get("text2");
 
         String diffPrettyHtml = diffService.diffPrettyHtml(text1, text2);
 

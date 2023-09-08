@@ -9,6 +9,7 @@ import cn.huanzi.qch.util.SecurityUtil;
 import com.jfinal.aop.Inject;
 import com.jfinal.core.ActionKey;
 import com.jfinal.core.Path;
+import com.jfinal.core.paragetter.Para;
 import com.jfinal.log.Log;
 
 import java.util.HashMap;
@@ -32,9 +33,10 @@ public class UserController extends CommonController<User,UserServiceImpl> {
 		render("user.html");
 	}
 
-	public void form() {
+	public void form(@Para("") User userVo) {
 		//接参
-		String id = get("id");
+//		String id = get("id");
+		String id = String.valueOf(userVo.getUserId());
 
 		set("user",userService.get(id));
 		render("form.html");
@@ -44,7 +46,7 @@ public class UserController extends CommonController<User,UserServiceImpl> {
 	 * 简单登录、注销、获取登录用户
 	 */
 	@ActionKey("/login")
-	public void login() {
+	public void login(@Para("") User userVo) {
 		String username = get("username");
 		String password = get("password");
 

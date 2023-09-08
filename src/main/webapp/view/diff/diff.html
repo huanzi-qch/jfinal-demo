@@ -74,19 +74,24 @@
     let text2 = "我是中国合法居民，今天打算写一个文本内容测试字符，没有别的意思！";
 
     //脚本测试
-    let flag = 0;
+    let flag = 1;
 
     //使用java版本库，调用后台处理
     if(flag){
         $.ajax({
             type:"POST",
             url:"#(ctx)/diff/diffPrettyHtml",
-            data:{
+            data:JSON.stringify({
                 text1:text1,
                 text2:text2,
-            },
+            }),
+            contentType:"application/json",
+            // data:{
+            //     text1:text1,
+            //     text2:text2,
+            // },
+            // contentType:"application/x-www-form-urlencoded",
             dataType:"JSON",
-            contentType:"application/x-www-form-urlencoded",
             success:function(data){
                 console.log(data);
 

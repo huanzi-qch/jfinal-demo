@@ -5,12 +5,13 @@ import cn.huanzi.qch.handler.MyActionHandler;
 import cn.huanzi.qch.handler.WebJarsHandler;
 import cn.huanzi.qch.interceptor.CORSInterceptor;
 import cn.huanzi.qch.interceptor.GlobalExceptionInterceptor;
+import cn.huanzi.qch.interceptor.JsonInterceptor;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.util.URLUtil;
 import com.jfinal.config.*;
 import com.jfinal.i18n.I18nInterceptor;
 import com.jfinal.json.JFinalJson;
-import com.jfinal.json.JFinalJsonFactory;
+import com.jfinal.json.MixedJsonFactory;
 import com.jfinal.kit.PathKit;
 import com.jfinal.kit.Prop;
 import com.jfinal.kit.PropKit;
@@ -30,8 +31,7 @@ import java.util.Objects;
  */
 public class AppConfig extends JFinalConfig {
 	private final Log log = Log.getLog(this.getClass());
-
-	static Prop p;
+	public static Prop p;
 
 	public AppConfig(){
 		AppConfig.loadConfig();
@@ -68,9 +68,9 @@ public class AppConfig extends JFinalConfig {
 		//是否开发模式
 		me.setDevMode(p.getBoolean("devMode", false));
 		
-		/**
-		 * 支持 Controller、Interceptor、Validator 之中使用 @Inject 注入业务层，并且自动实现 AOP
-		 * 注入动作支持任意深度并自动处理循环注入
+		/*
+		  支持 Controller、Interceptor、Validator 之中使用 @Inject 注入业务层，并且自动实现 AOP
+		  注入动作支持任意深度并自动处理循环注入
 		 */
 		me.setInjectDependency(true);
 		
@@ -78,7 +78,7 @@ public class AppConfig extends JFinalConfig {
 		me.setInjectSuperClass(true);
 
 		//Json
-		me.setJsonFactory(new JFinalJsonFactory());
+		me.setJsonFactory(new MixedJsonFactory());
 
 		//Model、Record 字段名转换为驼峰格式
 		JFinalJson.setModelAndRecordFieldNameToCamelCase();
@@ -173,6 +173,8 @@ public class AppConfig extends JFinalConfig {
 	public void configInterceptor(Interceptors me) {
 		//i18n
 		me.add(new I18nInterceptor());
+		//json 拦截,使得json参数也能作为action的参数，放在方法参数上
+		me.addGlobalActionInterceptor(new JsonInterceptor());
 	}
 	
 	/**

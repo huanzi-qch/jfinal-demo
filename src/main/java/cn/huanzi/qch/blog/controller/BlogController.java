@@ -10,6 +10,7 @@ import cn.huanzi.qch.common.model.Result;
 import cn.huanzi.qch.common.model.ServiceException;
 import com.jfinal.aop.Inject;
 import com.jfinal.core.Path;
+import com.jfinal.core.paragetter.Para;
 import com.jfinal.i18n.I18n;
 import com.jfinal.i18n.Res;
 import com.jfinal.kit.Kv;
@@ -55,9 +56,10 @@ public class BlogController extends CommonController<Blog,BlogServiceImpl> {
 		render("blog.html");
 	}
 
-	public void form() {
+	public void form(@Para("") Blog blogVo) {
 		//接参
-		String id = get("id");
+//		String id = get("id");
+		String id = String.valueOf(blogVo.getId());
 
 		Result<Blog> blogResult = blogService.get(id);
 		set("blog", blogResult);
